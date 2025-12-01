@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_01_175145) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_01_195325) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ai_messages", force: :cascade do |t|
+    t.string "role"
+    t.text "content"
+    t.bigint "user_id", null: false
+    t.bigint "workout_plan_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_ai_messages_on_user_id"
+    t.index ["workout_plan_id"], name: "index_ai_messages_on_workout_plan_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,4 +37,32 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_175145) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "workout_exercises", force: :cascade do |t|
+    t.integer "step_order"
+    t.string "name"
+    t.text "description"
+    t.string "reps_or_duration"
+    t.integer "rest_seconds"
+    t.bigint "workout_plan_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workout_plan_id"], name: "index_workout_exercises_on_workout_plan_id"
+  end
+
+  create_table "workout_plans", force: :cascade do |t|
+    t.string "level"
+    t.string "goal"
+    t.text "equipment"
+    t.integer "duration_minutes"
+    t.text "ai_plan"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_workout_plans_on_user_id"
+  end
+
+  add_foreign_key "ai_messages", "users"
+  add_foreign_key "ai_messages", "workout_plans"
+  add_foreign_key "workout_exercises", "workout_plans"
+  add_foreign_key "workout_plans", "users"
 end
