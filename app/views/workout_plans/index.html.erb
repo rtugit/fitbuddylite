@@ -1,2 +1,58 @@
-<h1>WorkoutPlans#index</h1>
-<p>Find me in app/views/workout_plans/index.html.erb</p>
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h1>My Workout Plans</h1>
+      <p class="text-muted">Select a workout plan to view details and exercises</p>
+    </div>
+    <div class="col-md-4 text-end">
+      <%= link_to "+ New Plan", new_workout_plan_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <% if @workout_plans.any? %>
+    <div class="row">
+      <% @workout_plans.each do |plan| %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm hover-shadow">
+            <div class="card-body">
+              <h5 class="card-title"><%= plan.goal %></h5>
+              <p class="card-text text-muted">
+                <strong>Level:</strong> <span class="badge bg-info"><%= plan.level %></span>
+              </p>
+              <p class="card-text">
+                <strong>Duration:</strong> <%= plan.duration_minutes %> min
+              </p>
+              <% if plan.equipment.present? %>
+                <p class="card-text small">
+                  <strong>Equipment:</strong> <%= plan.equipment %>
+                </p>
+              <% end %>
+              <p class="card-text text-muted small">
+                Created <%= time_ago_in_words(plan.created_at) %> ago
+              </p>
+            </div>
+            <div class="card-footer bg-white border-top">
+              <%= link_to "View", workout_plan_path(plan), class: "btn btn-sm btn-outline-primary" %>
+              <%= link_to "Edit", edit_workout_plan_path(plan), class: "btn btn-sm btn-outline-secondary" %>
+              <%= link_to "Delete", workout_plan_path(plan), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">No workout plans yet</h4>
+      <p>You haven't created any workout plans. <%= link_to "Create one now", new_workout_plan_path, class: "alert-link" %></p>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .hover-shadow {
+    transition: box-shadow 0.3s ease;
+  }
+  .hover-shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+</style>

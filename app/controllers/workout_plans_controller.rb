@@ -1,5 +1,7 @@
 class WorkoutPlansController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_workout_plan, only: %i[show edit update destroy]
+  before_action :authorize_user!, only: %i[show edit update destroy]
 
   def index
     @workout_plans = current_user.workout_plans
@@ -30,5 +32,9 @@ class WorkoutPlansController < ApplicationController
 
   def set_workout_plan
     @workout_plan = WorkoutPlan.find(params[:id])
+  end
+
+  def authorize_user!
+    redirect_to workout_plans_path, alert: "Not authorized" unless @workout_plan.user == current_user
   end
 end
