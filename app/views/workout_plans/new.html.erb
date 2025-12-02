@@ -12,12 +12,11 @@
 
         <div class="mb-3">
           <%= f.label :level, class: "form-label" %>
-          <%= f.select :level,
-                    ["Beginner", "beginner"],
-                    ["Intermediate", "intermediate"],
-                    ["Advanced", "advanced"],
-                      {},
-                      class: "form-select" %>
+          <%= f.select :level, [
+            ["Beginner", "beginner"],
+            ["Intermediate", "intermediate"],
+            ["Advanced", "advanced"]
+          ], {}, class: "form-select" %>
         </div>
 
         <div class="mb-3">
