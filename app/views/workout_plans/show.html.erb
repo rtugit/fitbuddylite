@@ -1,2 +1,130 @@
-<h1>WorkoutPlans#show</h1>
-<p>Find me in app/views/workout_plans/show.html.erb</p>
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h1><%= @workout_plan.goal %></h1>
+      <p class="text-muted">
+        <strong>Level:</strong> <span class="badge bg-info"><%= @workout_plan.level %></span>
+        <strong class="ms-3">Duration:</strong> <%= @workout_plan.duration_minutes %> min
+      </p>
+    </div>
+    <div class="col-md-4 text-end">
+      <%= link_to "Edit", edit_workout_plan_path(@workout_plan), class: "btn btn-secondary me-2" %>
+      <%= link_to "Back to Plans", workout_plans_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Plan Details -->
+      <div class="card mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Plan Details</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Goal:</strong> <%= @workout_plan.goal %></p>
+          <p><strong>Level:</strong> <%= @workout_plan.level %></p>
+          <p><strong>Duration:</strong> <%= @workout_plan.duration_minutes %> minutes</p>
+          <% if @workout_plan.equipment.present? %>
+            <p><strong>Equipment:</strong> <%= @workout_plan.equipment %></p>
+          <% end %>
+          <p><strong>Created:</strong> <%= @workout_plan.created_at.strftime('%B %d, %Y') %></p>
+        </div>
+      </div>
+
+      <!-- AI Plan Section -->
+      <% if @workout_plan.ai_plan.present? || @workout_plan.raw_plan_text.present? %>
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">AI-Generated Plan</h5>
+          </div>
+          <div class="card-body">
+            <% if @workout_plan.ai_plan.present? %>
+              <div class="alert alert-success">
+                <h6>Formatted Plan</h6>
+                <p><%= simple_format(@workout_plan.ai_plan) %></p>
+              </div>
+            <% end %>
+            <% if @workout_plan.raw_plan_text.present? %>
+              <div class="accordion" id="rawPlanAccordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rawPlanCollapse">
+                      Raw AI Output
+                    </button>
+                  </h2>
+                  <div id="rawPlanCollapse" class="accordion-collapse collapse" data-bs-parent="#rawPlanAccordion">
+                    <div class="accordion-body">
+                      <pre><code><%= @workout_plan.raw_plan_text %></code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Exercises Section -->
+      <div class="card mb-4">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Exercises (<%= @workout_plan.workout_exercises.count %>)</h5>
+          <%= link_to "+ Add Exercise", new_workout_plan_workout_exercise_path(@workout_plan), class: "btn btn-sm btn-primary" %>
+        </div>
+        <% if @workout_plan.workout_exercises.any? %>
+          <div class="list-group list-group-flush">
+            <% @workout_plan.workout_exercises.order(:step_order).each do |exercise| %>
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-md-1 text-center">
+                    <span class="badge bg-primary rounded-pill"><%= exercise.step_order %></span>
+                  </div>
+                  <div class="col-md-7">
+                    <h6 class="mb-1"><%= exercise.name %></h6>
+                    <p class="mb-0 text-muted small"><%= exercise.description %></p>
+                  </div>
+                  <div class="col-md-4 text-end">
+                    <small class="text-muted">
+                      <% if exercise.reps_or_duration.present? %>
+                        <strong>Reps/Duration:</strong> <%= exercise.reps_or_duration %><br>
+                      <% end %>
+                      <% if exercise.rest_seconds.present? %>
+                        <strong>Rest:</strong> <%= exercise.rest_seconds %>s
+                      <% end %>
+                    </small>
+                    <br>
+                    <%= link_to "Edit", edit_workout_plan_workout_exercise_path(@workout_plan, exercise), class: "btn btn-sm btn-outline-secondary mt-2" %>
+                    <%= link_to "Delete", workout_plan_workout_exercise_path(@workout_plan, exercise), method: :delete, data: { confirm: "Delete this exercise?" }, class: "btn btn-sm btn-outline-danger mt-2" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="card-body">
+            <p class="text-muted mb-0">No exercises yet. <%= link_to "Add one", new_workout_plan_workout_exercise_path(@workout_plan), class: "alert-link" %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar: Chat -->
+    <div class="col-md-4">
+      <div class="card sticky-top" style="top: 20px;">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">AI Coach Chat</h5>
+        </div>
+        <div class="card-body d-flex flex-column" style="height: 400px;">
+          <div class="flex-grow-1 overflow-auto mb-3" id="chatHistory" style="border: 1px solid #dee2e6; padding: 10px; border-radius: 4px;">
+            <p class="text-muted small text-center">Chat messages will appear here</p>
+          </div>
+          <%= form_with url: workout_plan_ai_messages_path(@workout_plan), method: :post, local: true do |f| %>
+            <div class="input-group">
+              <%= f.text_field :content, placeholder: "Ask the AI coach...", class: "form-control", required: true %>
+              <%= f.submit "Send", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
