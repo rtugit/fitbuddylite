@@ -4,9 +4,9 @@ FitBuddyLite is a small, Rails-based Mini AI workout app created as a Team Chall
 
 **Team Members**
 
-- **Ahmed Nadir**
-- **Leonardo Van den Berghe**
-- **Richard Uehre**
+- **[Ahmed Nadir](https://github.com/TechnoVen)**
+- **[Leonardo Van den Berghe](https://github.com/leonardovdb)**
+- **[Richard Uehre](https://github.com/rtugit)**
 
 **What this project is**
 
