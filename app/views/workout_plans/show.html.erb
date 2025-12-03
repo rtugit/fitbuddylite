@@ -31,35 +31,17 @@
         </div>
       </div>
 
-      <!-- AI Plan Section -->
-      <% if @workout_plan.ai_plan.present? || @workout_plan.raw_plan_text.present? %>
+            <!-- AI Plan Section -->
+      <% if @workout_plan.ai_plan.present? %>
         <div class="card mb-4">
           <div class="card-header bg-light">
             <h5 class="mb-0">AI-Generated Plan</h5>
           </div>
           <div class="card-body">
-            <% if @workout_plan.ai_plan.present? %>
-              <div class="alert alert-success">
-                <h6>Formatted Plan</h6>
-                <p><%= simple_format(@workout_plan.ai_plan) %></p>
-              </div>
-            <% end %>
-            <% if @workout_plan.raw_plan_text.present? %>
-              <div class="accordion" id="rawPlanAccordion">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rawPlanCollapse">
-                      Raw AI Output
-                    </button>
-                  </h2>
-                  <div id="rawPlanCollapse" class="accordion-collapse collapse" data-bs-parent="#rawPlanAccordion">
-                    <div class="accordion-body">
-                      <pre><code><%= @workout_plan.raw_plan_text %></code></pre>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+            <div class="alert alert-success">
+              <h6>Plan</h6>
+              <p><%= simple_format(@workout_plan.ai_plan) %></p>
+            </div>
           </div>
         </div>
       <% end %>
@@ -107,24 +89,30 @@
       </div>
     </div>
 
-    <!-- Sidebar: Chat -->
+        <!-- Sidebar: Chat -->
     <div class="col-md-4">
       <div class="card sticky-top" style="top: 20px;">
         <div class="card-header bg-light">
           <h5 class="mb-0">AI Coach Chat</h5>
         </div>
-        <div class="card-body d-flex flex-column" style="height: 400px;">
-          <div class="flex-grow-1 overflow-auto mb-3" id="chatHistory" style="border: 1px solid #dee2e6; padding: 10px; border-radius: 4px;">
-            <p class="text-muted small text-center">Chat messages will appear here</p>
-          </div>
-          <%= form_with url: workout_plan_ai_messages_path(@workout_plan), method: :post, local: true do |f| %>
-            <div class="input-group">
-              <%= f.text_field :content, placeholder: "Ask the AI coach...", class: "form-control", required: true %>
-              <%= f.submit "Send", class: "btn btn-primary" %>
-            </div>
+        <div class="card-body">
+          <% if (chat = @workout_plan.chats.find_by(user: current_user)) %>
+            <p class="text-muted small">
+              You already have an AI chat for this workout plan.
+            </p>
+            <%= link_to "Open AI chat",
+                        workout_plan_chat_path(@workout_plan, chat),
+                        class: "btn btn-primary w-100" %>
+          <% else %>
+            <p class="text-muted small">
+              Start a conversation with your AI coach about this workout plan.
+            </p>
+            <%= form_with url: workout_plan_chats_path(@workout_plan),
+                          method: :post,
+                          local: true do %>
+              <%= submit_tag "Start AI chat", class: "btn btn-primary w-100" %>
+            <% end %>
           <% end %>
         </div>
       </div>
     </div>
-  </div>
-</div>

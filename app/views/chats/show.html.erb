@@ -1,0 +1,72 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Header -->
+      <div class="chat-header d-flex align-items-center mb-3">
+        <div class="chat-avatar me-3">
+          <span>AI</span>
+        </div>
+        <div>
+          <h5 class="mb-0"><%= @workout_plan.goal %></h5>
+          <small class="text-muted">
+            Level: <%= @workout_plan.level %> · <%= @workout_plan.duration_minutes %> min
+          </small>
+        </div>
+      </div>
+
+      <!-- Chat Box -->
+      <div class="chat-box card">
+        <div class="card-body chat-body" id="chatBody">
+          <% if @ai_messages.any? %>
+            <% @ai_messages.order(:created_at).each do |message| %>
+              <% is_user = (message.role == "user") %>
+              <div class="chat-row <%= is_user ? 'justify-content-end' : 'justify-content-start' %>">
+                <div class="chat-bubble <%= is_user ? 'bubble-user' : 'bubble-ai' %>">
+                  <p class="mb-1"><%= simple_format(message.content) %></p>
+                  <small class="chat-meta">
+                    <%= is_user ? "You" : "AI" %> ·
+                    <%= l(message.created_at, format: :short) %>
+                  </small>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted text-center mb-0">
+              No messages yet – say hi to your AI coach 👋
+            </p>
+          <% end %>
+        </div>
+
+        <!-- Input -->
+        <div class="card-footer">
+          <%= form_with model: [@workout_plan, @chat, @ai_message], local: true do |f| %>
+            <div class="input-group">
+              <%= f.text_area :content,
+                              rows: 2,
+                              class: "form-control",
+                              placeholder: "Ask your AI coach something about this workout...",
+                              required: true %>
+              <button class="btn btn-primary" type="submit">
+                Send
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <%= link_to "← Back to workout plan", workout_plan_path(@workout_plan), class: "text-muted small" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-scroll nach unten
+  document.addEventListener("DOMContentLoaded", function () {
+    var chatBody = document.getElementById("chatBody");
+    if (chatBody) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  });
+</script>

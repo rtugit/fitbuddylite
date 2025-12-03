@@ -10,3 +10,66 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+
+/* Chat / WhatsApp-like bubbles */
+
+.chat-header {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.chat-box {
+  height: 70vh;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  background: #e5ddd5; /* WhatsApp-ähnlicher Hintergrund */
+  padding: 1rem;
+}
+
+.chat-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.chat-bubble {
+  max-width: 75%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  position: relative;
+  word-break: break-word;
+}
+
+.bubble-user {
+  background: #dcf8c6;
+  border-bottom-right-radius: 2px;
+}
+
+.bubble-ai {
+  background: #ffffff;
+  border-bottom-left-radius: 2px;
+}
+
+.chat-meta {
+  font-size: 0.7rem;
+  color: #6c757d;
+}
