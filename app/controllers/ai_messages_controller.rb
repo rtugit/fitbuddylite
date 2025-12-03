@@ -3,51 +3,53 @@ class AiMessagesController < ApplicationController
   before_action :set_workout_plan
   before_action :set_chat
 
-  def create
-    # 1) User message speichern
-    user_message = @chat.ai_messages.create!(
-      user: current_user,
-      workout_plan: @workout_plan,
-      role: "user",
-      content: params.require(:ai_message).fetch(:content)
-    )
+def create
+  # 1) User message speichern
+  user_message = @chat.ai_messages.create!(
+    user:         current_user,
+    workout_plan: @workout_plan,
+    role:         "user",
+    content:      params.require(:ai_message).fetch(:content)
+  )
 
-    # 2) Chat-Historie als Klartext erzeugen
-    history_text = @chat.ai_messages.order(:created_at).map do |msg|
-      speaker = msg.role == "user" ? "User" : "AI"
-      "#{speaker}: #{msg.content}"
-    end.join("\n")
+  # 2) Chat-Historie als Klartext erzeugen
+  history_text = @chat.ai_messages.order(:created_at).map do |msg|
+    speaker = msg.role == "user" ? "User" : "AI"
+    "#{speaker}: #{msg.content}"
+  end.join("\n")
 
-    # 3) Prompt erzeugen
-    prompt = <<~TEXT
-      You are a helpful fitness coach. Answer clearly and practically.
+  # 3) Prompt erzeugen
+  prompt = <<~TEXT
+    You are a workout assistant. Answer concisely.
 
-      Conversation:
-      #{history_text}
+    Conversation so far:
+    #{history_text}
 
-      AI:
-    TEXT
+    User: #{user_message.content}
+  TEXT
 
-    # 4) AI-Antwort von RubyLLM
-    chat_llm = RubyLLM.chat
-    ai_response = chat_llm.ask(prompt)
-    ai_text =
-      if ai_response.respond_to?(:text)
-        ai_response.text.to_s   # RubyLLM::Message → echten Text holen
-      else
-        ai_response.to_s        # Fallback, falls irgendwann ein String zurückkommt
-      end
+  # 4) AI-Antwort holen
+  chat_llm    = RubyLLM.chat
+ai_response = chat_llm.ask(prompt)
 
-    # 5) AI Message speichern
-    @chat.ai_messages.create!(
-      user: current_user,
-      workout_plan: @workout_plan,
-      role: "assistant",
-      content: ai_text
-    )
-
-    redirect_to workout_plan_chat_path(@workout_plan, @chat)
+ai_text =
+  if ai_response.respond_to?(:content)
+    ai_response.content.to_s        # Antworttext aus RubyLLM holen
+  else
+    ai_response.to_s                # Fallback, falls sich das API-Objekt mal ändert
   end
+
+  # 5) AI-Message speichern
+  @chat.ai_messages.create!(
+    user:         current_user,
+    workout_plan: @workout_plan,
+    role:         "assistant",
+    content:      ai_text
+  )
+
+  # 6) Weiterleiten (bleibt genau hier!)
+  redirect_to workout_plan_chat_path(@workout_plan, @chat)
+end
 
   private
 
