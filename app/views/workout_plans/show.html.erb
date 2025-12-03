@@ -75,7 +75,7 @@
                     </small>
                     <br>
                     <%= link_to "Edit", edit_workout_plan_workout_exercise_path(@workout_plan, exercise), class: "btn btn-sm btn-outline-secondary mt-2" %>
-                    <%= link_to "Delete", workout_plan_workout_exercise_path(@workout_plan, exercise), method: :delete, data: { confirm: "Delete this exercise?" }, class: "btn btn-sm btn-outline-danger mt-2" %>
+                    <%= link_to "Delete", workout_plan_workout_exercise_path(@workout_plan, exercise), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger mt-2" %>
                   </div>
                 </div>
               </div>
