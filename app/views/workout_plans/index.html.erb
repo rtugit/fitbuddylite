@@ -35,7 +35,7 @@
             <div class="card-footer bg-white border-top">
               <%= link_to "View", workout_plan_path(plan), class: "btn btn-sm btn-outline-primary" %>
               <%= link_to "Edit", edit_workout_plan_path(plan), class: "btn btn-sm btn-outline-secondary" %>
-              <%= link_to "Delete", workout_plan_path(plan), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+              <%= link_to "Delete", workout_plan_path(plan), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
             </div>
           </div>
         </div>

@@ -24,6 +24,22 @@ class WorkoutPlansController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @workout_plan.update(workout_plan_params)
+      redirect_to @workout_plan
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @workout_plan.destroy
+    redirect_to workout_plans_path, notice: "Workout plan deleted successfully."
+  end
+
   private
 
   def workout_plan_params
