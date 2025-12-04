@@ -17,6 +17,12 @@ class WorkoutPlansController < ApplicationController
   def create
     @workout_plan = WorkoutPlan.new(workout_plan_params)
     @workout_plan.user = current_user
+    
+    # Generate AI plan if requested (default: true)
+    if params[:generate_ai_plan] != "0"
+      @workout_plan.ai_plan = generate_ai_plan(@workout_plan)
+    end
+    
     if @workout_plan.save
       redirect_to @workout_plan
     else
@@ -52,5 +58,27 @@ class WorkoutPlansController < ApplicationController
 
   def authorize_user!
     redirect_to workout_plans_path, alert: "Not authorized" unless @workout_plan.user == current_user
+  end
+
+  def generate_ai_plan(workout_plan)
+    prompt = <<~PROMPT
+      Create a concise workout plan overview based on these details:
+      - Goal: #{workout_plan.goal}
+      - Level: #{workout_plan.level}
+      - Duration: #{workout_plan.duration_minutes} minutes
+      - Equipment: #{workout_plan.equipment.present? ? workout_plan.equipment : 'None'}
+      
+      Provide a brief 2-3 sentence overview of how to structure this workout (warm-up, sets, rest periods, intensity).
+      Keep it practical and actionable.
+    PROMPT
+
+    begin
+      chat = RubyLLM.chat
+      response = chat.ask(prompt)
+      response.content || "No AI plan generated."
+    rescue => e
+      Rails.logger.error "AI generation failed: #{e.message}"
+      "AI plan generation unavailable at this time."
+    end
   end
 end

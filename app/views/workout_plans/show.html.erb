@@ -31,17 +31,14 @@
         </div>
       </div>
 
-            <!-- AI Plan Section -->
+      <!-- AI Plan Section -->
       <% if @workout_plan.ai_plan.present? %>
         <div class="card mb-4">
           <div class="card-header bg-light">
             <h5 class="mb-0">AI-Generated Plan</h5>
           </div>
           <div class="card-body">
-            <div class="alert alert-success">
-              <h6>Plan</h6>
-              <p><%= simple_format(@workout_plan.ai_plan) %></p>
-            </div>
+            <%= simple_format(@workout_plan.ai_plan) %>
           </div>
         </div>
       <% end %>

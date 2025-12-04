@@ -29,6 +29,12 @@
           <%= f.text_field :equipment, class: "form-control", placeholder: "None, dumbbells, gym…" %>
         </div>
 
+        <div class="form-check mb-4">
+          <%= check_box_tag :generate_ai_plan, "1", true, class: "form-check-input", id: "generate_ai_plan" %>
+          <%= label_tag :generate_ai_plan, "Generate AI workout plan overview", class: "form-check-label" %>
+          <div class="form-text">Let AI create a structured workout overview based on your inputs.</div>
+        </div>
+
         <div class="d-flex justify-content-end">
           <%= link_to "Cancel", workout_plans_path, class: "btn btn-outline-secondary me-2" %>
           <%= f.submit "Create plan", class: "btn btn-primary" %>
