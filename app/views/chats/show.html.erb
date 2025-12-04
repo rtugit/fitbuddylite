@@ -40,7 +40,7 @@
         <!-- Input -->
         <div class="card-footer">
           <%= form_with model: [@workout_plan, @chat, @ai_message], local: true do |f| %>
-            <div class="input-group">
+            <div class="input-group mb-2">
               <%= f.text_area :content,
                               rows: 2,
                               class: "form-control",
@@ -50,6 +50,13 @@
                 Send
               </button>
             </div>
+          <% end %>
+          
+          <% if @workout_plan.ai_plan.present? %>
+            <%= button_to "🤖 Revise My Plan", 
+                revise_plan_workout_plan_chat_path(@workout_plan, @chat),
+                method: :post,
+                class: "btn btn-outline-primary btn-sm w-100" %>
           <% end %>
         </div>
       </div>
