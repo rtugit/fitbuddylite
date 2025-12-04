@@ -4,7 +4,7 @@ class AiMessagesController < ApplicationController
   before_action :set_chat
 
   def create
-    # 1) User message speichern
+    # 1) Save user message
     user_message = @chat.ai_messages.create!(
       user: current_user,
       workout_plan: @workout_plan,
@@ -12,13 +12,13 @@ class AiMessagesController < ApplicationController
       content: params.require(:ai_message).fetch(:content)
     )
 
-    # 2) Chat-Historie als Klartext erzeugen
+    # 2) Build chat history as plain text
     history_text = @chat.ai_messages.order(:created_at).map do |msg|
       speaker = msg.role == "user" ? "User" : "AI"
       "#{speaker}: #{msg.content}"
     end.join("\n")
 
-    # 3) Prompt erzeugen
+    # 3) Build prompt
     prompt = <<~TEXT
       You are a helpful fitness coach. Answer clearly and practically.
 
@@ -28,25 +28,31 @@ class AiMessagesController < ApplicationController
       AI:
     TEXT
 
-    # 4) AI-Antwort von RubyLLM
-    chat_llm = RubyLLM.chat
-    ai_response = chat_llm.ask(prompt)
-    ai_text =
-      if ai_response.respond_to?(:text)
-        ai_response.text.to_s   # RubyLLM::Message → echten Text holen
-      else
-        ai_response.to_s        # Fallback, falls irgendwann ein String zurückkommt
-      end
+    # 4) Get AI response from RubyLLM with error handling
+    begin
+      chat_llm = RubyLLM.chat
+      ai_response = chat_llm.ask(prompt)
+      ai_text =
+        if ai_response.respond_to?(:text)
+          ai_response.text.to_s   # RubyLLM::Message → extract actual text
+        else
+          ai_response.to_s        # Fallback if a string is returned
+        end
 
-    # 5) AI Message speichern
-    @chat.ai_messages.create!(
-      user: current_user,
-      workout_plan: @workout_plan,
-      role: "assistant",
-      content: ai_text
-    )
+      # 5) Save AI message
+      @chat.ai_messages.create!(
+        user: current_user,
+        workout_plan: @workout_plan,
+        role: "assistant",
+        content: ai_text
+      )
 
-    redirect_to workout_plan_chat_path(@workout_plan, @chat)
+      redirect_to workout_plan_chat_path(@workout_plan, @chat), notice: "AI response received."
+    rescue StandardError => e
+      Rails.logger.error "AI API Error: #{e.message}"
+      redirect_to workout_plan_chat_path(@workout_plan, @chat), 
+                  alert: "Sorry, the AI service is temporarily unavailable. Please try again later."
+    end
   end
 
   private
