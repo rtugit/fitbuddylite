@@ -4,7 +4,7 @@ class WorkoutPlansController < ApplicationController
   before_action :authorize_user!, only: %i[show edit update destroy]
 
   def index
-    @workout_plans = current_user.workout_plans
+    @workout_plans = current_user.workout_plans.order(updated_at: :desc)
   end
 
   def show
@@ -49,7 +49,7 @@ class WorkoutPlansController < ApplicationController
   private
 
   def workout_plan_params
-    params.require(:workout_plan).permit(:level, :goal, :equipment, :duration_minutes)
+    params.require(:workout_plan).permit(:age, :height, :weight, :handicap, :level, :goal, :equipment, :duration_minutes)
   end
 
   def set_workout_plan
@@ -63,6 +63,10 @@ class WorkoutPlansController < ApplicationController
   def generate_ai_plan(workout_plan)
     prompt = <<~PROMPT
       Create a concise workout plan overview based on these details:
+      - Age: #{workout_plan.age.present? ? workout_plan.age : 'Not specified'}
+      - Height: #{workout_plan.height.present? ? "#{workout_plan.height} cm" : 'Not specified'}
+      - Weight: #{workout_plan.weight.present? ? "#{workout_plan.weight} kg" : 'Not specified'}
+      - Handicap: #{workout_plan.handicap.present? ? workout_plan.handicap : 'None'}
       - Goal: #{workout_plan.goal}
       - Level: #{workout_plan.level}
       - Duration: #{workout_plan.duration_minutes} minutes

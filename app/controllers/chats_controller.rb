@@ -31,6 +31,12 @@ class ChatsController < ApplicationController
       Original Plan:
       #{@workout_plan.ai_plan || "No plan yet"}
       
+      Personal Information:
+      - Age: #{@workout_plan.age.present? ? @workout_plan.age : 'Not specified'}
+      - Height: #{@workout_plan.height.present? ? "#{@workout_plan.height} cm" : 'Not specified'}
+      - Weight: #{@workout_plan.weight.present? ? "#{@workout_plan.weight} kg" : 'Not specified'}
+      - Handicap: #{@workout_plan.handicap.present? ? @workout_plan.handicap : 'None'}
+      
       Goal: #{@workout_plan.goal}
       Level: #{@workout_plan.level}
       Duration: #{@workout_plan.duration_minutes} minutes
