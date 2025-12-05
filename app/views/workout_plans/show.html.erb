@@ -1,26 +1,27 @@
-<div class="container py-5">
-  <div class="row mb-4">
-    <div class="col-md-8">
-      <h1><%= @workout_plan.goal %></h1>
-      <p class="text-muted">
-        <strong>Level:</strong> <span class="badge bg-info"><%= @workout_plan.level %></span>
-        <strong class="ms-3">Duration:</strong> <%= @workout_plan.duration_minutes %> min
-      </p>
+<div class="workout-layout">
+  <div class="container py-5">
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <h1><%= @workout_plan.goal %></h1>
+        <p class="text-muted">
+          <strong>Level:</strong>
+          <span class="badge bg-info"><%= @workout_plan.level %></span>
+          <strong class="ms-3">Duration:</strong>
+          <%= @workout_plan.duration_minutes %> min
+        </p>
+      </div>
+      <div class="col-md-4 text-end">
+        <%= link_to "Edit", edit_workout_plan_path(@workout_plan), class: "btn btn-secondary me-2" %>
+        <%= link_to "Back to Plans", workout_plans_path, class: "btn btn-outline-secondary" %>
+      </div>
     </div>
-    <div class="col-md-4 text-end">
-      <%= link_to "Edit", edit_workout_plan_path(@workout_plan), class: "btn btn-secondary me-2" %>
-      <%= link_to "Back to Plans", workout_plans_path, class: "btn btn-outline-secondary" %>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-8">
-      <!-- Plan Details -->
-      <div class="card mb-4">
-        <div class="card-header bg-light">
-          <h5 class="mb-0">Plan Details</h5>
-        </div>
-        <div class="card-body">
+    <div class="row g-4">
+      <!-- Hauptspalte links -->
+      <div class="col-lg-8">
+        <!-- Plan Details -->
+        <div class="fb-card mb-4">
+          <h5 class="mb-3">Plan Details</h5>
           <% if @workout_plan.age.present? %>
             <p><strong>Age:</strong> <%= @workout_plan.age %> years</p>
           <% end %>
@@ -39,89 +40,102 @@
           <% if @workout_plan.equipment.present? %>
             <p><strong>Equipment:</strong> <%= @workout_plan.equipment %></p>
           <% end %>
-          <p><strong>Created:</strong> <%= @workout_plan.created_at.strftime('%B %d, %Y') %></p>
+          <p class="text-muted small mb-0">
+            <strong>Created:</strong> <%= @workout_plan.created_at.strftime('%B %d, %Y') %>
+          </p>
         </div>
-      </div>
 
-      <!-- AI Plan Section -->
-      <% if @workout_plan.ai_plan.present? %>
-        <div class="card mb-4">
-          <div class="card-header bg-light">
-            <h5 class="mb-0">AI-Generated Plan</h5>
-          </div>
-          <div class="card-body">
+        <!-- AI Plan Section -->
+        <% if @workout_plan.ai_plan.present? %>
+          <div class="fb-card mb-4">
+            <h5 class="mb-3">AI-Generated Plan</h5>
             <%= simple_format(@workout_plan.ai_plan) %>
           </div>
-        </div>
-      <% end %>
+        <% end %>
 
-      <!-- Exercises Section -->
-      <div class="card mb-4">
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Manually Added Exercises (<%= @workout_plan.workout_exercises.count %>)</h5>
-          <%= link_to "+ Add Exercise", new_workout_plan_workout_exercise_path(@workout_plan), class: "btn btn-sm btn-primary" %>
-        </div>
-        <% if @workout_plan.workout_exercises.any? %>
-          <div class="list-group list-group-flush">
-            <% @workout_plan.workout_exercises.order(:step_order).each do |exercise| %>
-              <div class="list-group-item">
-                <div class="row align-items-center">
-                  <div class="col-md-1 text-center">
-                    <span class="badge bg-primary rounded-pill"><%= exercise.step_order %></span>
-                  </div>
-                  <div class="col-md-7">
-                    <h6 class="mb-1"><%= exercise.name %></h6>
-                    <p class="mb-0 text-muted small"><%= exercise.description %></p>
-                  </div>
-                  <div class="col-md-4 text-end">
-                    <small class="text-muted">
-                      <% if exercise.reps_or_duration.present? %>
-                        <strong>Reps/Duration:</strong> <%= exercise.reps_or_duration %><br>
-                      <% end %>
-                      <% if exercise.rest_seconds.present? %>
-                        <strong>Rest:</strong> <%= exercise.rest_seconds %>s
-                      <% end %>
-                    </small>
-                    <br>
-                    <%= link_to "Edit", edit_workout_plan_workout_exercise_path(@workout_plan, exercise), class: "btn btn-sm btn-outline-secondary mt-2" %>
-                    <%= link_to "Delete", workout_plan_workout_exercise_path(@workout_plan, exercise), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger mt-2" %>
+        <!-- Exercises Section -->
+        <div class="fb-card mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">
+              Manually Added Exercises (<%= @workout_plan.workout_exercises.count %>)
+            </h5>
+            <%= link_to "+ Add Exercise",
+                        new_workout_plan_workout_exercise_path(@workout_plan),
+                        class: "btn btn-sm btn-primary" %>
+          </div>
+
+          <% if @workout_plan.workout_exercises.any? %>
+            <div class="list-group list-group-flush">
+              <% @workout_plan.workout_exercises.order(:step_order).each do |exercise| %>
+                <div class="list-group-item bg-transparent border-0 border-top">
+                  <div class="row align-items-center">
+                    <div class="col-md-1 text-center mb-2 mb-md-0">
+                      <span class="badge bg-primary rounded-pill">
+                        <%= exercise.step_order %>
+                      </span>
+                    </div>
+                    <div class="col-md-7 mb-2 mb-md-0">
+                      <h6 class="mb-1"><%= exercise.name %></h6>
+                      <p class="mb-0 text-muted small"><%= exercise.description %></p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                      <small class="text-muted">
+                        <% if exercise.reps_or_duration.present? %>
+                          <strong>Reps/Duration:</strong> <%= exercise.reps_or_duration %><br>
+                        <% end %>
+                        <% if exercise.rest_seconds.present? %>
+                          <strong>Rest:</strong> <%= exercise.rest_seconds %>s
+                        <% end %>
+                      </small>
+                      <br>
+                      <%= link_to "Edit",
+                                  edit_workout_plan_workout_exercise_path(@workout_plan, exercise),
+                                  class: "btn btn-sm btn-outline-secondary mt-2" %>
+                      <%= link_to "Delete",
+                                  workout_plan_workout_exercise_path(@workout_plan, exercise),
+                                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                                  class: "btn btn-sm btn-outline-danger mt-2" %>
+                    </div>
                   </div>
                 </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="card-body">
-            <p class="text-muted mb-0">No exercises yet. <%= link_to "Add one", new_workout_plan_workout_exercise_path(@workout_plan), class: "alert-link" %></p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-        <!-- Sidebar: Chat -->
-    <div class="col-md-4">
-      <div class="card sticky-top" style="top: 20px;">
-        <div class="card-header bg-light">
-          <h5 class="mb-0">AI Coach Chat</h5>
-        </div>
-        <div class="card-body">
-          <% if (chat = @workout_plan.chats.find_by(user: current_user)) %>
-            <p class="text-muted small">
-              You already have an AI chat for this workout plan.
-            </p>
-            <%= link_to "Open AI chat",
-                        workout_plan_chat_path(@workout_plan, chat),
-                        class: "btn btn-primary w-100" %>
+              <% end %>
+            </div>
           <% else %>
-            <p class="text-muted small">
-              Start a conversation with your AI coach about this workout plan.
+            <p class="text-muted mb-0">
+              No exercises yet.
+              <%= link_to "Add one",
+                          new_workout_plan_workout_exercise_path(@workout_plan),
+                          class: "link-light" %>
             </p>
-            <%= form_with url: workout_plan_chats_path(@workout_plan),
-                          method: :post,
-                          local: true do %>
-              <%= submit_tag "Start AI chat", class: "btn btn-primary w-100" %>
-            <% end %>
           <% end %>
         </div>
       </div>
+
+      <!-- Sidebar: Chat -->
+      <div class="col-lg-4">
+        <div class="fb-card sticky-top" style="top: 20px;">
+          <h5 class="mb-3">AI Coach Chat</h5>
+          <div>
+            <% if (chat = @workout_plan.chats.find_by(user: current_user)) %>
+              <p class="text-muted small">
+                You already have an AI chat for this workout plan.
+              </p>
+              <%= link_to "Open AI chat",
+                          workout_plan_chat_path(@workout_plan, chat),
+                          class: "btn btn-primary w-100" %>
+            <% else %>
+              <p class="text-muted small">
+                Start a conversation with your AI coach about this workout plan.
+              </p>
+              <%= form_with url: workout_plan_chats_path(@workout_plan),
+                            method: :post,
+                            local: true do %>
+                <%= submit_tag "Start AI chat", class: "btn btn-primary w-100" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
