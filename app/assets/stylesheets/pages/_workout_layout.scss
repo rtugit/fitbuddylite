@@ -1,0 +1,10 @@
+.workout-layout {
+  min-height: 100vh;
+  padding: 40px 0;
+  background: linear-gradient(
+    135deg,
+    $fb-gradient-start,
+    $fb-gradient-mid,
+    $fb-gradient-end
+  );
+}

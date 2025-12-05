@@ -1,65 +1,71 @@
-<div class="container py-5">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-      <h1>New Workout Plan</h1>
-      <p class="text-muted">Create a new plan tailored to your goal.</p>
+<div class="workout-layout">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-6">
+        <div class="fb-card">
+          <h1 class="mb-2">New Workout Plan</h1>
+          <p class="text-muted mb-4">Create a new plan tailored to your goal.</p>
 
-      <%= form_with model: @workout_plan, local: true do |f| %>
-        <div class="mb-3">
-          <%= f.label :age, class: "form-label" %>
-          <%= f.number_field :age, class: "form-control", min: 1, max: 120, placeholder: "e.g. 25" %>
-        </div>
+          <%= form_with model: @workout_plan, local: true do |f| %>
+            <div class="mb-3">
+              <%= f.label :age, class: "form-label" %>
+              <%= f.number_field :age, class: "form-control", min: 1, max: 120, placeholder: "e.g. 25" %>
+            </div>
 
-        <div class="mb-3">
-          <%= f.label :height, "Height (cm)", class: "form-label" %>
-          <%= f.number_field :height, class: "form-control", min: 50, max: 250, placeholder: "e.g. 175" %>
-        </div>
+            <div class="mb-3">
+              <%= f.label :height, "Height (cm)", class: "form-label" %>
+              <%= f.number_field :height, class: "form-control", min: 50, max: 250, placeholder: "e.g. 175" %>
+            </div>
 
-        <div class="mb-3">
-          <%= f.label :weight, "Weight (kg)", class: "form-label" %>
-          <%= f.number_field :weight, class: "form-control", min: 20, max: 300, placeholder: "e.g. 70" %>
-        </div>
+            <div class="mb-3">
+              <%= f.label :weight, "Weight (kg)", class: "form-label" %>
+              <%= f.number_field :weight, class: "form-control", min: 20, max: 300, placeholder: "e.g. 70" %>
+            </div>
 
-        <div class="mb-3">
-          <%= f.label :handicap, class: "form-label" %>
-          <%= f.text_field :handicap, class: "form-control", placeholder: "e.g. Knee injury, back pain, none" %>
-        </div>
+            <div class="mb-3">
+              <%= f.label :handicap, class: "form-label" %>
+              <%= f.text_field :handicap, class: "form-control", placeholder: "e.g. Knee injury, back pain, none" %>
+            </div>
 
-        <div class="mb-3">
-          <%= f.label :goal, class: "form-label" %>
-          <%= f.text_field :goal, class: "form-control", placeholder: "e.g. Fat loss, Strength, Mobility", required: true %>
-        </div>
+            <div class="mb-3">
+              <%= f.label :goal, class: "form-label" %>
+              <%= f.text_field :goal, class: "form-control", placeholder: "e.g. Fat loss, Strength, Mobility", required: true %>
+            </div>
 
-        <div class="mb-3">
-          <%= f.label :level, class: "form-label" %>
-          <%= f.select :level, [
-            ["Beginner", "beginner"],
-            ["Intermediate", "intermediate"],
-            ["Advanced", "advanced"]
-          ], {}, class: "form-select" %>
-        </div>
+            <div class="mb-3">
+              <%= f.label :level, class: "form-label" %>
+              <%= f.select :level, [
+                ["Beginner", "beginner"],
+                ["Intermediate", "intermediate"],
+                ["Advanced", "advanced"]
+              ], {}, class: "form-select" %>
+            </div>
 
-        <div class="mb-3">
-          <%= f.label :duration_minutes, "Duration (minutes)", class: "form-label" %>
-          <%= f.number_field :duration_minutes, class: "form-control", min: 5, placeholder: "min 5 minutes" %>
-        </div>
+            <div class="mb-3">
+              <%= f.label :duration_minutes, "Duration (minutes)", class: "form-label" %>
+              <%= f.number_field :duration_minutes, class: "form-control", min: 5, placeholder: "min 5 minutes" %>
+            </div>
 
-        <div class="mb-3">
-          <%= f.label :equipment, class: "form-label" %>
-          <%= f.text_field :equipment, class: "form-control", placeholder: "None, dumbbells, gym…" %>
-        </div>
+            <div class="mb-3">
+              <%= f.label :equipment, class: "form-label" %>
+              <%= f.text_field :equipment, class: "form-control", placeholder: "None, dumbbells, gym…" %>
+            </div>
 
-        <div class="form-check mb-4">
-          <%= check_box_tag :generate_ai_plan, "1", true, class: "form-check-input", id: "generate_ai_plan" %>
-          <%= label_tag :generate_ai_plan, "Generate AI workout plan overview", class: "form-check-label" %>
-          <div class="form-text">Let AI create a structured workout overview based on your inputs.</div>
-        </div>
+            <div class="form-check mb-4">
+              <%= check_box_tag :generate_ai_plan, "1", true, class: "form-check-input", id: "generate_ai_plan" %>
+              <%= label_tag :generate_ai_plan, "Generate AI workout plan overview", class: "form-check-label" %>
+              <div class="form-text">
+                Let AI create a structured workout overview based on your inputs.
+              </div>
+            </div>
 
-        <div class="d-flex justify-content-end">
-          <%= link_to "Cancel", workout_plans_path, class: "btn btn-outline-secondary me-2" %>
-          <%= f.submit "Create plan", class: "btn btn-primary" %>
+            <div class="d-flex justify-content-end">
+              <%= link_to "Cancel", workout_plans_path, class: "btn btn-outline-secondary me-2" %>
+              <%= f.submit "Create plan", class: "btn btn-primary" %>
+            </div>
+          <% end %>
         </div>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>

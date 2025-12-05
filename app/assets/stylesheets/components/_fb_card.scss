@@ -1,0 +1,78 @@
+.fb-card {
+  /* Glas-effect + slightly transparent */
+  background: rgba(36, 40, 70, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Form & Borders */
+  border-radius: 18px;
+  padding: 24px 24px 18px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  /* shadows */
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+
+  /* basic color */
+  color: #e8ecff;
+
+  /* titles & basic color in cards */
+  h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  p, span, small, .card-text {
+    color: #d0d5e6;
+  }
+
+  .text-muted {
+    color: #aab3d6 !important;
+  }
+
+  /* Badges (Level) */
+  .badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+  }
+
+  /* Buttons in Card */
+  .btn-outline-primary {
+    color: #6fa7ff;
+    border-color: #6fa7ff;
+
+    &:hover {
+      background: #6fa7ff;
+      border-color: #6fa7ff;
+      color: #ffffff;
+    }
+  }
+
+  /* EDIT – higher contrast */
+  .btn-outline-secondary {
+    color: #e8ecff;
+    border-color: rgba(255, 255, 255, 0.35);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.6);
+      color: #ffffff;
+    }
+  }
+
+  /* DELETE readability */
+  .btn-outline-danger {
+    background: #ff4d4d;
+    color: #ffffff;
+    border-color: #ff4d4d;
+
+    &:hover {
+      background: #e0002a;
+      border-color: #e0002a;
+      color: #ffffff;
+    }
+  }
+}
