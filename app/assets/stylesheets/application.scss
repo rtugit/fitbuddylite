@@ -11,7 +11,6 @@
 @import "components/index";
 @import "pages/index";
 
-/* Chat / WhatsApp-like bubbles */
 
 .chat-header {
   border-bottom: 1px solid #e9ecef;
@@ -21,7 +20,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #25d366;
+  background: #2570d3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +39,7 @@
 .chat-body {
   flex: 1;
   overflow-y: auto;
-  background: #e5ddd5; /* WhatsApp-ähnlicher Hintergrund */
+  background: #e5ddd5;
   padding: 1rem;
 }
 
@@ -60,7 +59,7 @@
 }
 
 .bubble-user {
-  background: #dcf8c6;
+  background: #d0c6f8;
   border-bottom-right-radius: 2px;
 }
 
@@ -72,4 +71,88 @@
 .chat-meta {
   font-size: 0.7rem;
   color: #6c757d;
+}
+
+/* ===== Login background & glass card ===== */
+
+/* Main login background */
+.login-background {
+  min-height: 100vh;
+  background-image: url('login-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* Dark overlay + slight blur */
+.login-background::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(29, 29, 29, 0.237);
+  backdrop-filter: blur(1px);
+  z-index: -1;
+}
+
+/* Wrapper for the entire login layout */
+.login-wrapper {
+  min-height: 100vh;
+  padding-right: 8vw;
+  padding-left: 8vw;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left column containing the FIT BUDDY LITE logo */
+.fit-buddy-logo-wrapper {
+  flex: 0 0 40%;        /* Prevents shrinking to zero width */
+  display: flex;
+  align-items: center;
+}
+
+/* Logo image styling */
+.fit-buddy-logo {
+  display: block;
+  max-width: 560px;
+  height: auto;
+  margin-left: 40px;
+}
+
+/* Right side: the actual login card */
+.login-card {
+  max-width: 380px;
+  width: 100%;
+  color: #ffffff;
+
+  background: rgba(82, 84, 136, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  flex-shrink: 0;        /* Ensures the card does not collapse vertically */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .fit-buddy-logo-wrapper {
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .login-card {
+    margin: 0 auto;
+  }
 }
