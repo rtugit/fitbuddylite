@@ -1,13 +1,15 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: "pages#home"
 
-  # Allow GET requests for sign out (in addition to DELEE which is already built in in devise_for:users) as we want to get back to the home page after signing out
+  # All routes that depend on the Devise :user mapping
   devise_scope :user do
-   get "/users/sign_out", to: "devise/sessions#destroy"
+    # Default landing page: Devise sign-in screen
+    root to: "devise/sessions#new"
+
+    get "/users/sign_out", to: "devise/sessions#destroy"
   end
 
-
+  # Workout plans with nested chat and AI message handling
   resources :workout_plans do
     resources :chats, only: [:show, :create] do
       post 'revise_plan', on: :member
